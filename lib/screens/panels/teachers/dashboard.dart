@@ -518,35 +518,47 @@ class TeacherClassesPanel extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+
                             children: [
-                              Icon(
-                                Iconsax.book,
-                                size: 15,
-                                color: Colors.grey[600],
+                              Row(
+                                children: [
+                                  Icon(
+                                    Iconsax.book,
+                                    size: 15,
+                                    color: Colors.grey[600],
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    classe["subject"],
+                                    style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 5),
-                              Text(
-                                classe["subject"],
-                                style: TextStyle(
-                                  color: Colors.grey[700],
-                                  fontSize: 13,
-                                ),
-                              ),
+
                               const SizedBox(width: 15),
-                              Icon(
-                                Iconsax.people,
-                                size: 15,
-                                color: Colors.grey[600],
+                              Row(
+                                children: [
+                                  Icon(
+                                    Iconsax.people,
+                                    size: 15,
+                                    color: Colors.grey[600],
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "${classe["students"]} élèves",
+                                    style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 5),
-                              Text(
-                                "${classe["students"]} élèves",
-                                style: TextStyle(
-                                  color: Colors.grey[700],
-                                  fontSize: 13,
-                                ),
-                              ),
+                              
                             ],
                           ),
                         ],
@@ -583,7 +595,7 @@ class ClassDetailPage extends StatefulWidget {
     {"name": "David Leroy"},
   ];
 
-  ClassDetailPage({
+  const ClassDetailPage({
     super.key,
     required this.className,
     required this.subject,
