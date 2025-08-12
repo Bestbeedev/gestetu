@@ -24,70 +24,78 @@ class _CourseManagementPanelState extends State<CourseManagementPanel> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Operation selection section
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
-          child: Text(
-            "Gestion des cours",
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+    return SizedBox(
+      height: MediaQuery.of(context).size.height, // Adjust for AppBar height
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Operation selection section
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 16.0,
+              horizontal: 8.0,
+            ),
+            child: Text(
+              "Gestion des cours",
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Wrap(
-            spacing: 16,
-            children: [
-              _OperationButton(
-                icon: Iconsax.add_square,
-                label: "Ajouter Filière",
-                selected: _selectedOperation == Operation.filiere,
-                onTap:
-                    () =>
-                        setState(() => _selectedOperation = Operation.filiere),
-              ),
-              _OperationButton(
-                icon: Iconsax.book,
-                label: "Ajouter Matière",
-                selected: _selectedOperation == Operation.matiere,
-                onTap:
-                    () =>
-                        setState(() => _selectedOperation = Operation.matiere),
-              ),
-              _OperationButton(
-                icon: Iconsax.user_tag,
-                label: "Assigner Professeur",
-                selected: _selectedOperation == Operation.assignProf,
-                onTap:
-                    () => setState(
-                      () => _selectedOperation = Operation.assignProf,
-                    ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 24),
-        // Dynamic content based on operation
-        Expanded(
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child:
-                _selectedOperation == null
-                    ? Center(
-                      child: Icon(
-                        Iconsax.arrow_down_1,
-                        size: 48,
-                        color: Colors.grey[400],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Wrap(
+              spacing: 16,
+              children: [
+                _OperationButton(
+                  icon: Iconsax.add_square,
+                  label: "Ajouter Filière",
+                  selected: _selectedOperation == Operation.filiere,
+                  onTap:
+                      () => setState(
+                        () => _selectedOperation = Operation.filiere,
                       ),
-                    )
-                    : _buildOperationContent(),
+                ),
+                _OperationButton(
+                  icon: Iconsax.book,
+                  label: "Ajouter Matière",
+                  selected: _selectedOperation == Operation.matiere,
+                  onTap:
+                      () => setState(
+                        () => _selectedOperation = Operation.matiere,
+                      ),
+                ),
+                _OperationButton(
+                  icon: Iconsax.user_tag,
+                  label: "Assigner Professeur",
+                  selected: _selectedOperation == Operation.assignProf,
+                  onTap:
+                      () => setState(
+                        () => _selectedOperation = Operation.assignProf,
+                      ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 24),
+          // Dynamic content based on operation
+          Expanded(
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child:
+                  _selectedOperation == null
+                      ? Center(
+                        child: Icon(
+                          Iconsax.arrow_down_1,
+                          size: 48,
+                          color: Colors.grey[400],
+                        ),
+                      )
+                      : SingleChildScrollView(child: _buildOperationContent()),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -120,27 +128,51 @@ class _OperationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        selected ? Theme.of(context).colorScheme.primary : Colors.grey[300];
-    final textColor = selected ? Colors.white : Colors.black87;
-    return Material(
-      color: color,
-      borderRadius: BorderRadius.circular(8),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, color: textColor, size: 22),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: TextStyle(color: textColor, fontWeight: FontWeight.w500),
-              ),
-            ],
+    final isSelected = selected;
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final surface = theme.colorScheme.surface;
+    final borderColor = isSelected ? primary : Colors.grey[300];
+    final bgColor = isSelected ? primary.withOpacity(0.08) : surface;
+    final iconColor = isSelected ? primary : Colors.grey[700];
+    final textColor = isSelected ? primary : Colors.black87;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: borderColor!, width: isSelected ? 2 : 1),
+        boxShadow: [
+          if (isSelected)
+            BoxShadow(
+              color: primary.withOpacity(0.12),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(14),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: iconColor, size: 26),
+                const SizedBox(width: 12),
+                Text(
+                  label,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: textColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -163,6 +195,7 @@ class _AddFiliereSectionState extends State<_AddFiliereSection> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -198,7 +231,8 @@ class _AddFiliereSectionState extends State<_AddFiliereSection> {
             ],
           ),
           const SizedBox(height: 16),
-          Expanded(
+          Flexible(
+            fit: FlexFit.loose,
             child:
                 _filieres.isEmpty
                     ? Center(
@@ -208,6 +242,8 @@ class _AddFiliereSectionState extends State<_AddFiliereSection> {
                       ),
                     )
                     : ListView.separated(
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
                       itemCount: _filieres.length,
                       separatorBuilder: (_, __) => const Divider(),
                       itemBuilder:
@@ -249,6 +285,7 @@ class _AddMatiereSectionState extends State<_AddMatiereSection> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -309,7 +346,8 @@ class _AddMatiereSectionState extends State<_AddMatiereSection> {
             ],
           ),
           const SizedBox(height: 16),
-          Expanded(
+          Flexible(
+            fit: FlexFit.loose,
             child:
                 _selectedFiliere == null
                     ? Center(
@@ -327,6 +365,8 @@ class _AddMatiereSectionState extends State<_AddMatiereSection> {
                       ),
                     )
                     : ListView.separated(
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
                       itemCount: _matieres[_selectedFiliere!]!.length,
                       separatorBuilder: (_, __) => const Divider(),
                       itemBuilder:
@@ -370,14 +410,14 @@ class _AssignProfSectionState extends State<_AssignProfSection> {
     "Physique": ["Mécanique", "Optique"],
   };
   final List<String> _profs = ["Dr. Diallo", "Mme. Traoré", "M. Konaté"];
-  final Map<String, String> _assignments =
-      {}; // key: filiere-matiere, value: prof
+  final Map<String, String> _assignments = {};
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -451,7 +491,8 @@ class _AssignProfSectionState extends State<_AssignProfSection> {
                     : null,
           ),
           const SizedBox(height: 16),
-          Expanded(
+          Flexible(
+            fit: FlexFit.loose,
             child:
                 _assignments.isEmpty
                     ? Center(
@@ -461,6 +502,8 @@ class _AssignProfSectionState extends State<_AssignProfSection> {
                       ),
                     )
                     : ListView.separated(
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
                       itemCount: _assignments.length,
                       separatorBuilder: (_, __) => const Divider(),
                       itemBuilder: (context, index) {
