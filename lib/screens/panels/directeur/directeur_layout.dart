@@ -11,7 +11,6 @@ import '../../../widgets/navigation/navigation_bar_custom.dart';
 class DirecteurLayout extends StatefulWidget {
   const DirecteurLayout({super.key});
 
-
   @override
   State<DirecteurLayout> createState() => _DirecteurLayoutState();
 }
@@ -30,7 +29,7 @@ final List<Widget> _pages = [
 final List<String> titlePages = [
   'Accueil',
   'Matières',
-  'Etudiants',
+  'Utilisateurs',
   //'Enseignants',
   'Inscriptions',
   'Paiements',
@@ -58,7 +57,7 @@ class _DirecteurLayoutState extends State<DirecteurLayout> {
               label: Text('0'),
               offset: Offset(-4, 4),
               child: IconButton(
-                icon: Icon(Iconsax.notification,size: 23,),
+                icon: Icon(Iconsax.notification, size: 23),
                 onPressed: () {
                   Navigator.pushNamed(context, '/notifications');
                 },
@@ -68,7 +67,7 @@ class _DirecteurLayoutState extends State<DirecteurLayout> {
           Padding(
             padding: const EdgeInsets.only(right: 12.0),
             child: IconButton(
-              icon: Icon(Iconsax.profile_circle,size: 23,),
+              icon: Icon(Iconsax.profile_circle, size: 23),
               onPressed: () {
                 Navigator.pushNamed(context, '/profile');
               },
@@ -76,7 +75,13 @@ class _DirecteurLayoutState extends State<DirecteurLayout> {
           ),
         ],
       ),
-      drawer: DrawerWidget(onPageSelected: (index) { setState(() { _currentIndex = index; }); },),
+      drawer: DrawerWidget(
+        onPageSelected: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
       body: SingleChildScrollView(child: _pages[_currentIndex]),
       bottomNavigationBar: NavigationBarCustom(
         currentIndex: _currentIndex,
